@@ -5,7 +5,7 @@ import Header from './Header';
 
 const Layout = ({ children }) => {
   const location = useLocation();
-  const showHeader = location.pathname === '/products' || location.pathname.startsWith('/products/');
+  const showHeader = location.pathname === '/' || location.pathname.startsWith('/');
 
   return (
     <div className="flex">

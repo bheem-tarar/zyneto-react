@@ -1,6 +1,5 @@
 import { productApi } from '../../api/productApi';
 
-// Action Types
 export const PRODUCT_ACTIONS = {
   FETCH_PRODUCTS_REQUEST: 'FETCH_PRODUCTS_REQUEST',
   FETCH_PRODUCTS_SUCCESS: 'FETCH_PRODUCTS_SUCCESS',
@@ -14,7 +13,6 @@ export const PRODUCT_ACTIONS = {
   CLEAR_PRODUCTS_FILTER: 'CLEAR_PRODUCTS_FILTER',
 };
 
-// Action Creators
 export const fetchProductsRequest = () => ({
   type: PRODUCT_ACTIONS.FETCH_PRODUCTS_REQUEST,
 });
@@ -52,7 +50,6 @@ export const clearProductsFilter = () => ({
   type: PRODUCT_ACTIONS.CLEAR_PRODUCTS_FILTER,
 });
 
-// Thunk Actions
 export const fetchProducts = (params = {}) => {
   return async (dispatch) => {
     dispatch(fetchProductsRequest());

@@ -1,0 +1,8 @@
+@import "tailwindcss";
+
+
+:root {
+  --palette-primary-dark: #3b82f6; 
+  --palette-primary-main: #60a5fa; 
+  --palette-primary-light: #bfdbfe;
+}

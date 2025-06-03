@@ -22,7 +22,7 @@ const ProductDetail = () => {
     const colorMap = {
       green: 'bg-green-500',
       black: 'bg-gray-900',
-      white: 'bg-gray-100 border-2 border-gray-300',
+      white: 'bg-white border-2 border-gray-300',
       pink: 'bg-pink-300',
       blue: 'bg-blue-500',
       red: 'bg-red-500',
@@ -42,6 +42,20 @@ const ProductDetail = () => {
     console.log('Checking shipping for postal code:', postalCode);
   };
 
+  const getProductColors = () => {
+    if (!product.colors) return [];
+
+    if (Array.isArray(product.colors)) {
+      return product.colors;
+    }
+
+    if (typeof product.colors === 'string') {
+      return product.colors.split(',').map(color => color.trim()).filter(color => color);
+    }
+
+    return [];
+  };
+
   useEffect(() => {
     if (id) {
       dispatch(fetchProductDetail(parseInt(id)));
@@ -50,8 +64,9 @@ const ProductDetail = () => {
 
   useEffect(() => {
     if (product) {
-      if (product.colors && product.colors.length > 0) {
-        setSelectedColor(product.colors[0]);
+      const colors = getProductColors();
+      if (colors.length > 0) {
+        setSelectedColor(colors[0]);
       }
       if (product.sizes && product.sizes.length > 0) {
         setSelectedSize(product.sizes[0]);
@@ -61,7 +76,7 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 ml-[350px] overflow-y-auto">
+      <div className="min-h-screen bg-gray-50 overflow-y-auto">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="animate-pulse">
             <div className="h-6 bg-gray-200 rounded w-1/4 mb-8"></div>
@@ -106,7 +121,8 @@ const ProductDetail = () => {
     );
   }
 
-  // Generate thumbnail images (using main image if thumbnails not available)
+  const colors = getProductColors();
+
   const thumbnailImages = product.thumbnails || [
     product.image,
     product.image,
@@ -117,8 +133,8 @@ const ProductDetail = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 ml-[350px]">
-      <div className="bg-white border-b sticky top-0 z-10">
+    <div className="min-h-screen bg-gray-100">
+      <div className="bg-gray-100  sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-4">
           <nav className="flex items-center space-x-2 text-sm text-gray-600">
             <button onClick={() => navigate('/')} className="hover:text-gray-900">Home</button>
@@ -130,12 +146,10 @@ const ProductDetail = () => {
         </div>
       </div>
 
-      <div className="overflow-auto max-h-[700px]">
+      <div className="overflow-auto max-h-[90vh]">
         <div className="max-w-7xl mx-auto px-4 py-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Product Images */}
             <div className="flex gap-4">
-              {/* Thumbnail images - Left side */}
               <div className="flex flex-col space-y-2">
                 {thumbnailImages.slice(0, 6).map((img, index) => (
                   <button
@@ -147,9 +161,17 @@ const ProductDetail = () => {
                 ))}
               </div>
 
-              {/* Main Product Image */}
               <div className="flex-1">
                 <div className="relative bg-white rounded-lg overflow-hidden">
+                  {product.tag && (
+                    <span className={`absolute top-3 left-3 px-2 py-1 text-xs font-semibold rounded-full ${product.tag === 'SALE' ? 'bg-red-500 text-white' :
+                        product.tag === 'NEW' ? 'bg-green-500 text-white' :
+                          product.tag === 'FEATURED' ? 'bg-blue-500 text-white' :
+                            'bg-blue-500 text-white'
+                      }`}>
+                      {product.tag}
+                    </span>
+                  )}
                   <button className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-md hover:shadow-lg transition-shadow">
                     <Heart className="w-5 h-5 text-gray-600" />
                   </button>
@@ -162,7 +184,6 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Product Info */}
             <div className="space-y-6">
               <div>
                 <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
@@ -170,44 +191,50 @@ const ProductDetail = () => {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-semibold text-gray-600">MRP:</span>
+                <div className="flex items-center gap-4">
                   <span className="text-2xl font-bold text-gray-900">
-                    {product.mrp || product.price || product.discountPrice}
+                    ${product.discount_price || product.price}
                   </span>
+                  {product.old_price && (
+                    <span className="text-lg text-gray-500 line-through">
+                      ${product.old_price}
+                    </span>
+                  )}
+                  {product.old_price && product.discount_percentage && (
+                    <span className="text-sm text-green-600 font-medium bg-green-100 px-2 py-1 rounded">
+                      {product.discount_percentage}% OFF
+                    </span>
+                  )}
                 </div>
                 <p className="text-sm text-gray-500">(Inclusive of all taxes)</p>
               </div>
 
-              {/* Color Selection */}
-              {product.colors && product.colors.length > 0 && (
+              {colors.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-4">
-                    {/* <div className="w-12 h-12 bg-white border rounded overflow-hidden">
-                      <div className={`w-full h-full ${getColorClass(selectedColor)}`}></div>
-                    </div> */}
-                    {/* <div>
-                      <span className="text-sm text-gray-600">
-                        082 - {selectedColor ? selectedColor.charAt(0).toUpperCase() + selectedColor.slice(1) : ''} / {product.colors.join(' / ')}
-                      </span>
-                    </div> */}
+                    <span className="font-semibold text-gray-900">Color: {selectedColor}</span>
                   </div>
 
                   <div className="flex space-x-2">
-                    {product.colors.map((color, index) => (
+                    {colors.map((color, index) => (
                       <button
                         key={index}
                         onClick={() => setSelectedColor(color)}
-                        className={`w-8 h-8 rounded border-2 transition-all ${getColorClass(color)} ${selectedColor === color ? 'ring-2 ring-blue-500 ring-offset-2' : 'hover:scale-110'
+                        className={`w-8 h-8 rounded border-2 transition-all ${getColorClass(color)} ${selectedColor === color
+                            ? 'ring-2 ring-blue-500 ring-offset-2'
+                            : 'hover:scale-110'
                           }`}
                         title={color}
                       />
                     ))}
                   </div>
+
+                  <p className="text-sm text-gray-500">
+                    {colors.length} color{colors.length > 1 ? 's' : ''} available
+                  </p>
                 </div>
               )}
 
-              {/* Size Selection */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-gray-900">Size</span>
@@ -216,14 +243,14 @@ const ProductDetail = () => {
                   </button>
                 </div>
 
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 flex-wrap">
                   {(product.sizes || ['7 UK', '8 UK', '9 UK', '10 UK', '11 UK']).map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`px-4 py-2 border rounded text-sm font-medium transition-colors ${selectedSize === size
-                        ? 'border-black bg-black text-white'
-                        : 'border-gray-300 bg-white text-gray-900 hover:border-gray-400'
+                          ? 'border-black bg-black text-white'
+                          : 'border-gray-300 bg-white text-gray-900 hover:border-gray-400'
                         }`}
                     >
                       {size}
@@ -232,25 +259,22 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              {/* Action Buttons - Updated to match image */}
               <div className="flex w-full">
                 <button
                   onClick={handleAddToCart}
                   disabled={cartLoading || !selectedSize}
-                  className="w-1/2 bg-green hover:bg-green-900 disabled:bg-green-900 text-white font-bold py-4 px-6 transition-colors text-sm tracking-wide border border-green-700"
+                  className="w-1/2 bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-bold py-4 px-6 transition-colors text-sm tracking-wide border border-green-600"
                 >
                   {cartLoading ? 'ADDING...' : 'ADD TO CART'}
                 </button>
 
-                <button className="w-1/2 bg-white border border-green-700 text-green-700 hover:bg-green-50 font-bold py-4 px-6 transition-colors text-sm tracking-wide">
+                <button className="w-1/2 bg-white border border-green-600 text-green-600 hover:bg-green-50 font-bold py-4 px-6 transition-colors text-sm tracking-wide">
                   BUY NOW
                 </button>
               </div>
 
-
-              {/* Shipping Check */}
-              <div className="flex items-center gap-4">
-                <h3 className="font-semibold text-gray-900 whitespace-nowrap">
+              <div className="space-y-2">
+                <h3 className="font-semibold text-gray-900">
                   Check Shipping Availability
                 </h3>
                 <div className="flex">
@@ -259,29 +283,27 @@ const ProductDetail = () => {
                     placeholder="POSTAL CODE"
                     value={postalCode}
                     onChange={(e) => setPostalCode(e.target.value)}
-                    className="px-4 py-2 border border-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 ml-[40px]"
+                    className="flex-1 px-4 py-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
                   />
                   <button
                     onClick={handleCheckShipping}
-                    className="bg-green-900 hover:bg-green-800 text-white px-6 py-2  font-medium transition-colors border border-green-900"
+                    className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 font-medium transition-colors border border-green-600"
                   >
                     Check
                   </button>
                 </div>
               </div>
-
             </div>
           </div>
 
-          {/* Product Details Tabs */}
           <div className="mt-16">
             <div className="border-b border-gray-200">
               <nav className="flex space-x-8">
                 <button
                   onClick={() => setActiveTab('description')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'description'
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-green-600 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
                   DESCRIPTION
@@ -289,8 +311,8 @@ const ProductDetail = () => {
                 <button
                   onClick={() => setActiveTab('sizeGuide')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'sizeGuide'
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-green-600 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
                   SIZE GUIDE
@@ -298,8 +320,8 @@ const ProductDetail = () => {
                 <button
                   onClick={() => setActiveTab('delivery')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${activeTab === 'delivery'
-                    ? 'border-green-600 text-green-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700'
+                      ? 'border-green-600 text-green-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700'
                     }`}
                 >
                   FREE DELIVERY AND RETURNS
@@ -335,18 +357,18 @@ const ProductDetail = () => {
                         <span className="text-gray-900">{product.company}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">MRP:</span>
-                        <span className="text-gray-900">{product.mrp || product.price}</span>
+                        <span className="text-gray-600">Price:</span>
+                        <span className="text-gray-900">${product.discount_price || product.price}</span>
                       </div>
-                      {product.discountPrice && (
+                      {product.old_price && (
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Sale Price:</span>
-                          <span className="text-gray-900">{product.discountPrice}</span>
+                          <span className="text-gray-600">Original Price:</span>
+                          <span className="text-gray-900">${product.old_price}</span>
                         </div>
                       )}
                       <div className="flex justify-between">
                         <span className="text-gray-600">Available Colors:</span>
-                        <span className="text-gray-900">{product.colors ? product.colors.length : 0}</span>
+                        <span className="text-gray-900">{colors.length}</span>
                       </div>
                       {product.tag && (
                         <div className="flex justify-between">
@@ -397,7 +419,7 @@ const ProductDetail = () => {
                         Enjoy Free Returns using our easy returns process. We accept returns 15 days from receipt of your order.
                       </p>
                       <ul className="space-y-2 text-gray-700">
-                        <li>• Free shipping on orders over ₹2,500</li>
+                        <li>• Free shipping on orders over $50</li>
                         <li>• Standard delivery: 3-5 business days</li>
                         <li>• Express delivery: 1-2 business days</li>
                         <li>• Easy returns within 15 days</li>

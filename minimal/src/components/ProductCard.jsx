@@ -1,12 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-// import { useDispatch } from 'react-redux';
 import { ShoppingCart, Heart } from 'lucide-react';
-// import { addToCart } from '../store/actions/cartActions';
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
 
   const getColorClass = (color) => {
     const colorMap = {
@@ -35,17 +32,30 @@ const ProductCard = ({ product }) => {
     navigate(`/products/${product.id}`);
   };
 
-  // const handleAddToCart = (e) => {
-  //   e.stopPropagation(); // Prevent navigation when clicking add to cart
-  //   const defaultColor = product.colors && product.colors.length > 0 ? product.colors[0] : null;
-  //   dispatch(addToCart(product.id, 1, defaultColor));
-  // };
-
   const handleWishlist = (e) => {
     e.stopPropagation();
     console.log('Added to wishlist:', product.id);
     // Implement wishlist functionality
   };
+
+  // Safely handle colors - ensure it's always an array
+  const getProductColors = () => {
+    if (!product.colors) return [];
+    
+    // If colors is already an array (JSONField approach)
+    if (Array.isArray(product.colors)) {
+      return product.colors;
+    }
+    
+    // If colors is a string (TextField approach)
+    if (typeof product.colors === 'string') {
+      return product.colors.split(',').map(color => color.trim()).filter(color => color);
+    }
+    
+    return [];
+  };
+
+  const colors = getProductColors();
 
   return (
     <div 
@@ -56,7 +66,7 @@ const ProductCard = ({ product }) => {
         <img 
           src={product.image} 
           alt={product.name} 
-          className="w-full h-64 object-cover  transition-transform duration-300"
+          className="w-full h-64 object-cover transition-transform duration-300"
         />
         {product.tag && (
           <span className={`absolute top-3 left-3 px-2 py-1 text-xs font-semibold rounded-full ${getTagClass(product.tag)}`}>
@@ -76,16 +86,16 @@ const ProductCard = ({ product }) => {
         
         <div className="flex items-center justify-between mb-3">
           <div className="flex space-x-1">
-            {product.colors && product.colors.slice(0, 3).map((color, index) => (
+            {colors.slice(0, 3).map((color, index) => (
               <div
                 key={index}
                 className={`w-4 h-4 rounded-full ${getColorClass(color)}`}
                 title={color}
               />
             ))}
-            {product.colors && product.colors.length > 3 && (
+            {colors.length > 3 && (
               <div className="w-4 h-4 rounded-full bg-gray-200 flex items-center justify-center">
-                <span className="text-xs text-gray-600">+{product.colors.length - 3}</span>
+                <span className="text-xs text-gray-600">+{colors.length - 3}</span>
               </div>
             )}
           </div>
@@ -94,25 +104,21 @@ const ProductCard = ({ product }) => {
         
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center space-x-2">
-            <span className="text-lg font-bold text-gray-900">{product.discountPrice || product.price}</span>
-            {product.oldPrice && (
-              <span className="text-sm text-gray-500 line-through">{product.oldPrice}</span>
+            <span className="text-lg font-bold text-gray-900">
+              ${product.discount_price || product.price}
+            </span>
+            {product.old_price && (
+              <span className="text-sm text-gray-500 line-through">
+                ${product.old_price}
+              </span>
             )}
           </div>
-          {/* {product.oldPrice && (
+          {product.old_price && (
             <span className="text-sm text-green-600 font-medium">
-              {((parseFloat(product.oldPrice.replace(', '')) - parseFloat(product.discountPrice.replace(', ''))) / parseFloat(product.oldPrice.replace(', '')) * 100).toFixed(0)}% OFF
+              {product.discount_percentage}% OFF
             </span>
-          )} */}
+          )}
         </div>
-        
-        {/* <button
-          onClick={handleAddToCart}
-          className="w-full bg-gray-900 hover:bg-gray-800 text-white py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2 group-hover:bg-blue-600"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          Add to Cart
-        </button> */}
       </div>
     </div>
   );

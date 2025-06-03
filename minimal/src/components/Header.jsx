@@ -3,7 +3,7 @@ import { Search, User, Filter, ChevronDown } from 'lucide-react';
 
 const Header = () => {
     return (
-        <div className="h-[100px] bg-white border-b  px-6 py-4 ml-[300px]"
+        <div className="h-[100px] px-6 py-4 ml-[300px] bg-gray-100"
             style={{ '--Paper-shadow': 'var(--shadows-4)' }}>
             <div className="flex items-center justify-between">
                 <h1 className="text-2xl font-bold text-gray-900"></h1>
