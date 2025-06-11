@@ -22,8 +22,8 @@ const productReducer = (state = initialState, action) => {
             return {
                 ...state,
                 loading: false,
-                products: action.payload.results || [],           // <-- use results array
-                totalCount: action.payload.count || action.payload.results.length || 0,  // total count from 'count'
+                products: action.payload.results || [],           
+                totalCount: action.payload.count || action.payload.results.length || 0,  
                 error: null,
             };
 

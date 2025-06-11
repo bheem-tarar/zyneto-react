@@ -3,7 +3,7 @@ import { CreditCard, Star, DollarSign, Database, Cloud } from 'lucide-react';
 
 const AdvanceThird = () => {
   return (
-    <div className="bg-white max-w-7xl mx-auto ml-[40px]">
+    <div className="bg-white max-w-7xl mx-auto ml-[px]">
       <div className="grid grid-cols-1 md:grid-cols-2 divide-x divide-gray-200">
 
         <div className="bg-white rounded-l-lg p-6">

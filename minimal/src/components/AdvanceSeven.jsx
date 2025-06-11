@@ -36,7 +36,6 @@ const AdvanceSeven = () => {
     ];
 
     return (
-        // <div className="min-h-screen bg-gray-50 p-6">
             <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
 
                 <div className="bg-white rounded-2xl shadow-sm p-6 mb-[20px]">
@@ -117,7 +116,6 @@ const AdvanceSeven = () => {
                 </div>
             </div>
         </div>
-        // </div >
     );
 };
 export default AdvanceSeven;

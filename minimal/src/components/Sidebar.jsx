@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { BarChart3, User, Package, Settings } from 'lucide-react';
-import { Menu } from 'lucide-react'; // For hamburger icon
+import { Menu, BarChart3, User, Package, Settings, Blocks, LogIn, UserPlus, } from 'lucide-react';
 
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -11,11 +10,15 @@ const Sidebar = () => {
   const isActive = (path) => location.pathname === path;
 
   const menuItems = [
-  { id: 'dashboard', label: 'Dashboard', icon: BarChart3, path: '/dashboard' },
-  { id: 'user', label: 'User', icon: User, path: '/users' },
-  { id: 'product', label: 'Product', icon: Package, path: '/products', badge: '+3' },
-  { id: 'advance', label: 'Advance', icon: Settings, path: '/advance' }, // <-- Added this
-];
+    { id: 'dashboard', label: 'Dashboard', icon: BarChart3, path: '/dashboard' },
+    { id: 'user', label: 'User', icon: User, path: '/users' },
+    { id: 'product', label: 'Product', icon: Package, path: '/products', badge: '+3' },
+    { id: 'advance', label: 'Advance', icon: Settings, path: '/advance' },
+    { id: 'blog', label: 'Blog', icon: Blocks, path: '/Blog' },
+    { id: 'sign in', label: 'Sign in', icon: LogIn, path: '/signin' },
+    { id: 'signup', label: 'Sign up', icon: UserPlus, path: '/signup' }, 
+    { id: 'profile', lable: 'Profile', icon: UserPlus, path: '/profile' }
+  ];
 
   return (
     <>
@@ -54,7 +57,6 @@ const Sidebar = () => {
             </svg>
           </div>
 
-          {/* Info block */}
           <div className="flex items-center justify-between bg-gray-50 p-4 rounded-xl shadow-sm mb-6">
             <div className="flex items-center space-x-3">
               <img src="/src/assets/logo-1.webp" alt="logo-1" className="w-8 h-8" />
@@ -71,8 +73,6 @@ const Sidebar = () => {
             </svg>
           </div>
 
-          {/* Navigation */}
-          {/* Navigation - Scrollable */}
           <div className="overflow-y-auto max-h-[calc(100vh-350px)] pr-2">
             <nav className="space-y-2">
               {menuItems.map((item) => {
@@ -82,14 +82,14 @@ const Sidebar = () => {
                   <div
                     key={item.id}
                     className={`flex items-center p-3 rounded-lg cursor-pointer transition-colors ${active
-                        ? item.id === 'product'
-                          ? 'bg-blue-50 text-blue-600'
-                          : 'bg-gray-100 text-gray-900'
-                        : 'text-gray-600 hover:bg-gray-50'
+                      ? item.id === 'product'
+                        ? 'bg-blue-50 text-blue-600'
+                        : 'bg-gray-100 text-gray-900'
+                      : 'text-gray-600 hover:bg-gray-50'
                       }`}
                     onClick={() => {
                       navigate(item.path);
-                      setIsOpen(false); // close on mobile after click
+                      setIsOpen(false);
                     }}
                   >
                     <IconComponent className="w-5 h-5 mr-3" />

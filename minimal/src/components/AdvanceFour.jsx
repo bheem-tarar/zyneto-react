@@ -6,7 +6,6 @@ const AdvanceFour = () => {
     <div className=" max-w-7xl mx-auto">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-        {/* Total Earning Card */}
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-2xl font-semibold text-gray-800">Total Earning</h2>

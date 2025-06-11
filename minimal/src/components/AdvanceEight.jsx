@@ -107,7 +107,7 @@ const AdvanceEight = () => {
             </div>
 
             <div className="lg:w-6/12 xl:w-1/2 space-x-3">
-                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden h-[600px]">
                     <div className="relative h-48 bg-gradient-to-r from-orange-200 to-yellow-100">
                         <img
                             src={Cafebg}

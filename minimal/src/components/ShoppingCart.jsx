@@ -8,15 +8,12 @@ const ShoppingCartFloat = ({ itemCount = 0 }) => {
   const dispatch = useDispatch();
   const { totalItems } = useSelector(state => state.cart);
   
-  // Use Redux totalItems if available, otherwise use prop
   const displayCount = totalItems || itemCount;
 
   const handleCartClick = () => {
     console.log('Cart clicked');
-    // Fetch latest cart data
     dispatch(fetchCart());
-    // Navigate to cart page or open cart modal
-    // navigate('/cart'); // if using react-router
+
   };
 
   return (

@@ -27,3 +27,4 @@ export const API_ENDPOINTS = {
 };
 
 export { API_BASE_URL };
+//url endpoint pages
